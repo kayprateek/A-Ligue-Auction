@@ -1,0 +1,26 @@
+<?php
+$conn = new mysqli("localhost","root","","auctiontv");
+if(!$conn){
+    echo "Connection failed";
+}
+else{
+    $result=$conn->query("select * from player where 1");
+        if($result->num_rows>0){
+            $row=$result->fetch_assoc();
+            echo json_encode(
+                array(
+                    'name' => $row['Name'],
+                    'dept' => $row['Dept'],
+                    'pos' => $row['Position'],
+                    'mlt' => $row['Mini_Ligue'],
+                    'ph' => $row['Phone'],
+                    'cteam' => $row['C_Team'],
+                    'cprice' => $row['C_Prize'],
+                    'base' => $row['Base'],
+                    'yr' => $row['Year'],
+                    'status' => $row['Status']
+                )
+            );
+        }
+    }
+?>
