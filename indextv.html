@@ -1,0 +1,118 @@
+<html>
+    <head>
+        <title>A-Ligue Action</title>
+    </head>
+    <style>
+        body{
+            background-color: white;
+            color: red;
+            font-weight: bold;
+            top :10%;
+            left : 30%;
+            font-size:xx-large;
+            position: absolute;
+        }
+        #home{
+            background-color: white;
+            border: 1px solid blueviolet;
+            color: blue;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding: 10px 100px;
+            max-width: 550px; 
+            font-size: x-large;
+        }
+        #bid{
+            background-color: white;
+            border: 1px solid blueviolet;
+            color: blue;
+            font-weight: bold;
+            margin-bottom: 10 px;
+            padding: 10px 100px;
+            max-width: 550px; 
+            font-size: x-large;
+        }
+        #bids{
+            display: none;
+        }
+    </style>
+    
+    <body>
+        <p>&emsp;Player Info</p>
+        <div id="home">
+            
+            <p id="name"></p>
+            <p id="dept"></p>
+            <p id="yr"></p>
+            <p id="pos"></p>
+            <p id="mlp"></p>
+            <p id="base"></p>
+            <p id="phone"></p>
+        </div>
+        <div id="bids">
+            <p><b>&emsp;Current bid</b></p>
+        <div id="bid">
+            <p id="cteam"></p>
+            <p id="cprice"></p>
+        </div>
+        </div>
+        <br>
+        <p id="sts"></p>
+        <br>
+    </body>
+    <script>
+        const form={
+            name : document.getElementById("name"),
+            dept : document.getElementById("dept"),
+            pos : document.getElementById("pos"),
+            mlp : document.getElementById("mlp"),
+            cteam : document.getElementById("cteam"),
+            cprice : document.getElementById("cprice"),
+            phone : document.getElementById("phone"),
+            base : document.getElementById("base"),
+            yr : document.getElementById("yr"),
+            bids : document.getElementById('bids'),
+            sts : document.getElementById('sts')
+        }
+        setInterval(() => {
+            const request1 = new XMLHttpRequest();
+            request1.onload = () => {
+            var responseObject1 = null;
+            try {
+                responseObject1=JSON.parse(request1.responseText);
+            } 
+            catch (e) {console.log("error");}
+            if(responseObject1){
+                form.name.textContent="Name : "+responseObject1.name;
+                form.dept.textContent="Department : "+responseObject1.dept;
+                form.pos.textContent="Position : "+responseObject1.pos;
+                form.base.textContent="Base Price : "+responseObject1.base+"k";
+                form.mlp.textContent="Mini Ligue Team : "+responseObject1.mlt;
+                form.phone.textContent="Phone : "+responseObject1.ph;
+            }
+            if(responseObject1.status=='Selling'){
+                form.cteam.textContent="Current Team : "+responseObject1.cteam;
+                form.cprice.textContent="Current Price : "+responseObject1.cprice+"k";
+                form.bids.style.display='block';
+                form.sts.textContent="";
+            }
+            else if(responseObject1.status=="Not_Sold"){
+                form.sts.textContent="";
+                form.bids.style.display='none';
+            }
+            else if(responseObject1.status=='Sold'){
+                form.bids.style.display='none';
+                form.sts.textContent=" Player Sold to "+responseObject1.cteam+" for "+responseObject1.cprice+"k";
+            }
+            else if(responseObject1.status=="Unsold"){
+                form.bids.style.display='none';
+                form.sts.textContent=" Player Goes Unsold";
+            }
+            }
+            requestdata=`ok=${true}`;
+            request1.open("post","auctiontv.php");
+            request1.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            request1.send(requestdata);
+        }, 1000);
+    </script>
+</html>
