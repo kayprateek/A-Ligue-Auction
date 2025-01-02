@@ -1,2 +1,2 @@
 # A-Ligue-Auction
-Its a official webpage for Anna - Ligue.
+Official webpage for Anna - Ligue.
